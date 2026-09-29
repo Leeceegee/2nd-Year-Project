@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edustay — Bookings</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brand: #1a5c3a; --brand-light: #e8f5ee; --brand-mid: #2d8a59;
+    --surface: #ffffff; --page-bg: #f4f6f5; --border: #dde3df;
+    --text: #1a2620; --muted: #5a7060; --danger: #c0392b; --radius: 10px; --sidebar-w: 220px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: var(--text); display: flex; min-height: 100vh; }
+  aside { width: var(--sidebar-w); background: var(--brand); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+  .logo { padding: 28px 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .logo-name { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+  .logo-sub { font-size: 11px; color: rgba(255,255,255,0.55); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  nav { padding: 20px 12px; flex: 1; }
+  nav a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; margin-bottom: 2px; transition: background 0.15s, color 0.15s; }
+  nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  nav a.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 500; }
+  nav a .icon { width: 18px; height: 18px; opacity: 0.8; flex-shrink: 0; }
+  .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.35); padding: 16px 12px 6px; }
+  .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+  .av { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; }
+  .sidebar-user-name { font-size: 13px; color: rgba(255,255,255,0.8); }
+  .sidebar-user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+  main { margin-left: var(--sidebar-w); flex: 1; }
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 5; }
+  .topbar-breadcrumb { font-size: 13px; color: var(--muted); }
+  .topbar-breadcrumb span { color: var(--text); font-weight: 500; }
+  .content { padding: 28px 32px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 600; color: var(--text); line-height: 1; }
+  .stat-accent { color: var(--brand-mid); }
+
+  .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .table-toolbar { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .search-box { flex: 1; max-width: 280px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px; background: #fafbfa; }
+  .search-box input { border: none; outline: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); width: 100%; }
+  .filter-select { font-family: 'DM Sans', sans-serif; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; padding: 7px 28px 7px 10px; background: #fafbfa; color: var(--text); outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a7060' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead { border-bottom: 1px solid var(--border); }
+  th { padding: 11px 16px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+  td { padding: 13px 16px; border-bottom: 1px solid #f0f2f1; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #fafbfa; }
+
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+  .badge-confirmed { background: #e8f5ee; color: #1a5c3a; }
+  .badge-pending { background: #fef9e7; color: #7d6608; }
+  .badge-cancelled { background: #fdedec; color: #922b21; }
+  .badge-completed { background: #eaf4fb; color: #154360; }
+
+  .btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 5px 12px; border-radius: 7px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; transition: all 0.12s; }
+  .btn:hover { border-color: var(--brand-mid); color: var(--brand); background: var(--brand-light); }
+  .table-footer { padding: 12px 20px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><div class="logo-name">Edustay</div><div class="logo-sub">Admin Portal</div></div>
+  <nav>
+    <div class="nav-section">Students</div>
+    <a href="/register"><svg class="icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Register Student</a>
+    <a href="/admin"><svg class="icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>All Students</a>
+    <div class="nav-section">Listings</div>
+    <a href="/listings"><svg class="icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Listings</a>
+    <div class="nav-section">Bookings</div>
+    <a href="/bookings" class="active"><svg class="icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Bookings</a>
+    <div class="nav-section">Admin Analytics</div>
+    <a href="/listing-stats"><svg class="icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Listing Statistics</a>
+    <a href="/reports"><svg class="icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Reports</a>
+  </nav>
+  <div class="sidebar-footer"><div class="av">AD</div><div><div class="sidebar-user-name">Admin</div><div class="sidebar-user-role">Super Admin</div></div></div>
+</aside>
+
+<main>
+  <div class="topbar">
+    <div class="topbar-breadcrumb">Bookings / <span>All Bookings</span></div>
+  </div>
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Total Bookings</div><div class="stat-value">31</div></div>
+      <div class="stat-card"><div class="stat-label">Confirmed</div><div class="stat-value stat-accent">18</div></div>
+      <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value">7</div></div>
+      <div class="stat-card"><div class="stat-label">Revenue (KES)</div><div class="stat-value">284K</div></div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="search-box">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search bookings…">
+        </div>
+        <select class="filter-select"><option>All Statuses</option><option>Confirmed</option><option>Pending</option><option>Cancelled</option><option>Completed</option></select>
+        <select class="filter-select"><option>All Months</option><option>April 2025</option><option>March 2025</option><option>February 2025</option></select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Student</th>
+            <th>Listing</th>
+            <th>Location</th>
+            <th>Move-in Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="bookingsBody"></tbody>
+      </table>
+      <div class="table-footer"><span>7 bookings shown</span><span>Page 1 of 5</span></div>
+    </div>
+  </div>
+</main>
+
+<script>
+  // Redirect to login if not logged in
+const loggedInUser = JSON.parse(localStorage.getItem('edustay_user') || 'null');
+if (!loggedInUser) {
+    window.location.href = '/login';
+}
+const badgeMap = { 
+    Confirmed:'badge-confirmed', 
+    Pending:'badge-pending', 
+    Cancelled:'badge-cancelled', 
+    Completed:'badge-completed' 
+};
+
+function loadBookings() {
+    fetch('/api/admin/bookings')
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById('bookingsBody');
+
+            const total     = data.length;
+            const confirmed = data.filter(b => b.status === 'confirmed').length;
+            const pending   = data.filter(b => b.status === 'pending').length;
+
+            const statCards = document.querySelectorAll('.stat-value');
+            if(statCards.length >= 3) {
+                statCards[0].textContent = total;
+                statCards[1].textContent = confirmed;
+                statCards[2].textContent = pending;
+            }
+
+            if(data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">No bookings yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(b => `
+                <tr>
+                    <td style="font-family:monospace;font-size:13px;color:var(--muted)">BK-${String(b.id).padStart(4,'0')}</td>
+                    <td style="font-weight:500">${b.student_name || 'Unknown'}</td>
+                    <td style="font-size:13px">${b.listing_title || 'Unknown'}</td>
+                    <td style="font-size:13px;color:var(--muted)">${b.location || '—'}</td>
+                    <td style="font-size:13px">${b.created_at ? b.created_at.split('T')[0] : '—'}</td>
+                    <td style="font-weight:500;color:var(--brand)">KES ${b.amount || '—'}</td>
+                    <td><span class="badge ${badgeMap[b.status] || 'badge-pending'}">${b.status}</span></td>
+                    <td><button class="btn" onclick="viewBooking(${b.id})">Details</button></td>
+                </tr>
+            `).join('');
+        })
+        .catch(err => {
+            console.log('Error loading bookings:', err);
+            document.getElementById('bookingsBody').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">Error loading bookings</td></tr>';
+        });
+}
+
+function viewBooking(id) {
+    alert('Booking ID: BK-' + String(id).padStart(4,'0'));
+}
+
+loadBookings();
+</script>
+</body>
+</html>

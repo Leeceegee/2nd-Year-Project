@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edustay — Find Student Accommodation</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --brand: #1a5c3a;
+            --brand-mid: #2d8a59;
+            --brand-light: #e8f5ee;
+            --text: #1a2620;
+            --muted: #5a7060;
+            --border: #dde3df;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f4f6f5;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: white;
+            padding: 0 60px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--brand);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--brand);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--brand); }
+
+        .nav-cta {
+            background: var(--brand);
+            color: white !important;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .nav-cta:hover {
+            background: var(--brand-mid) !important;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--brand) 0%, #0d3d25 100%);
+            color: white;
+            padding: 90px 60px 70px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 400px; height: 400px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+            top: -100px; right: -80px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.9);
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 46px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span { color: #7fffb8; }
+
+        .hero p {
+            font-size: 17px;
+            color: rgba(255,255,255,0.7);
+            max-width: 500px;
+            margin: 0 auto 50px;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+
+        .hero-stat h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: #7fffb8;
+        }
+
+        .hero-stat p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.55);
+            margin-top: 4px;
+        }
+
+        /* ROLE SECTION */
+        .role-section {
+            padding: 70px 60px;
+            text-align: center;
+            background: white;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--brand-mid);
+            margin-bottom: 10px;
+        }
+
+        .role-section h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .role-section > p {
+            color: var(--muted);
+            font-size: 15px;
+            margin-bottom: 48px;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .role-card {
+            background: #fafbfa;
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 20px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .role-card:hover {
+            border-color: var(--brand-mid);
+            background: var(--brand-light);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(26,92,58,0.12);
+        }
+
+        .role-emoji {
+            width: 72px; height: 72px;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 4px;
+        }
+
+        .role-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .role-card p {
+            font-size: 13px;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .role-btn {
+            margin-top: 8px;
+            padding: 8px 20px;
+            background: var(--brand);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .role-btn:hover { background: var(--brand-mid); }
+
+        /* FEATURES */
+        .features {
+            padding: 70px 60px;
+            background: #f4f6f5;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .features-header h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .features-header p {
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .feature-icon {
+            width: 42px; height: 42px;
+            background: var(--brand-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+
+        .feature-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: var(--brand);
+            color: rgba(255,255,255,0.55);
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+        }
+
+        .footer span { color: #7fffb8; }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a href="/" class="logo">
+        <div class="logo-icon">🏠</div>
+        <span class="logo-name">Edustay</span>
+    </a>
+    <div class="nav-links">
+        <a href="/listings">Browse Listings</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="/admin" class="nav-cta">Admin Portal</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-badge">🎓 Built for Kenyan University Students</div>
+    <h1>Find Your Perfect<br><span>Student Home</span></h1>
+    <p>Discover affordable, verified accommodation near your university — all in one place.</p>
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <h3 id="stat-listings">120+</h3>
+            <p>Active Listings</p>
+        </div>
+        <div class="hero-stat">
+            <h3 id="stat-students">340+</h3>
+            <p>Students Housed</p>
+        </div>
+        <div class="hero-stat">
+            <h3 id="stat-landlords">80+</h3>
+            <p>Verified Landlords</p>
+        </div>
+    </div>
+</div>
+
+<!-- ROLE SELECTOR -->
+<div class="role-section">
+    <div class="section-label">Get Started</div>
+    <h2>Who are you?</h2>
+    <p>Select your role and we'll take you to the right place</p>
+
+    <div class="role-grid">
+        <a class="role-card" href="/role?role=student">
+            <div class="role-emoji">🎓</div>
+            <h3>Student</h3>
+            <p>Find affordable accommodation near your university</p>
+            <button class="role-btn">Find a Home →</button>
+        </a>
+
+        <a class="role-card" href="/role?role=landlord">
+            <div class="role-emoji">🏠</div>
+            <h3>Landlord</h3>
+            <p>List your property and reach thousands of students</p>
+            <button class="role-btn">List Property →</button>
+        </a>
+
+        <a class="role-card" href="/role?role=agent">
+            <div class="role-emoji">🤝</div>
+            <h3>Agent</h3>
+            <p>Manage properties and connect students with homes</p>
+            <button class="role-btn">Get Started →</button>
+        </a>
+
+        <a class="role-card" href="/role?role=admin">
+            <div class="role-emoji">⚙️</div>
+            <h3>Admin</h3>
+            <p>Manage the platform, users and view analytics</p>
+            <button class="role-btn">Admin Portal →</button>
+        </a>
+    </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+    <div class="features-header">
+        <h2>Why Edustay?</h2>
+        <p>Everything a student needs to find the right home</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📍</div>
+            <h4>Near Your University</h4>
+            <p>Listings filtered by proximity to Kenyan universities so you never commute far.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">✅</div>
+            <h4>Verified Listings</h4>
+            <p>Every property is verified before it appears on the platform.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <h4>Affordable Pricing</h4>
+            <p>All prices in KES with affordability scores to help you decide.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h4>Safe & Secure</h4>
+            <p>Secure bookings and verified landlords so you rent with confidence.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h4>Easy to Use</h4>
+            <p>Simple interface designed for students on any device.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⭐</div>
+            <h4>Student Reviews</h4>
+            <p>Read honest reviews from students who have lived there before.</p>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2025 <span>Edustay</span> — Built for Kenyan University Students
+</div>
+
+</body>
+</html>

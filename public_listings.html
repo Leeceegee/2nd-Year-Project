@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edustay — Browse Listings</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brand: #1a5c3a; --brand-light: #e8f5ee; --brand-mid: #2d8a59;
+    --surface: #ffffff; --page-bg: #f4f6f5; --border: #dde3df;
+    --text: #1a2620; --muted: #5a7060;
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: var(--text); }
+
+  /* NAVBAR */
+  .navbar {
+    background: white;
+    padding: 0 60px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--brand);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+  }
+
+  .logo-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--brand);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--brand); }
+
+  .btn-login {
+    background: var(--brand) !important;
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  .btn-login:hover {
+    background: var(--brand-mid) !important;
+  }
+
+  /* HERO BANNER */
+  .hero-banner {
+    background: linear-gradient(135deg, var(--brand), #0d3d25);
+    color: white;
+    padding: 50px 60px;
+    text-align: center;
+  }
+
+  .hero-banner h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .hero-banner p {
+    color: rgba(255,255,255,0.7);
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .login-cta {
+    display: inline-block;
+    background: white;
+    color: var(--brand);
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .login-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  /* LISTINGS GRID */
+  .content { padding: 40px 60px; }
+
+  .section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 25px;
+  }
+
+  .listings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .listing-card {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .listing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .card-image {
+    height: 140px;
+    background: linear-gradient(135deg, var(--brand-light), #c8e6d4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+  }
+
+  .card-body { padding: 18px; }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+
+  .card-location {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .card-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--brand);
+    margin-bottom: 12px;
+  }
+
+  .card-tag {
+    display: inline-block;
+    background: var(--brand-light);
+    color: var(--brand);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .card-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+
+  .card-btn:hover { background: var(--brand-mid); }
+
+  /* Lock overlay for booking */
+  .lock-overlay {
+    background: #f4f6f5;
+    border: 1.5px dashed var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .lock-overlay a {
+    color: var(--brand);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: var(--brand);
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+    margin-top: 60px;
+  }
+
+  .footer span { color: #7fffb8; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="/" class="logo">
+    <div class="logo-icon">🏠</div>
+    <span class="logo-name">Edustay</span>
+  </a>
+  <div class="nav-links">
+    <a href="/register">Register</a>
+    <a href="/login" class="btn-login">Sign In</a>
+  </div>
+</nav>
+
+<!-- HERO BANNER -->
+<div class="hero-banner">
+  <h1>Browse Student Listings</h1>
+  <p>Find affordable accommodation near your university — sign in to book!</p>
+  <a href="/login" class="login-cta">🔑 Sign In to Book</a>
+</div>
+
+<!-- LISTINGS -->
+<div class="content">
+  <p class="section-title">🏠 Available Listings</p>
+  <div class="listings-grid" id="listingsGrid">
+    <!-- Loaded from Flask API -->
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  © 2025 <span>Edustay</span> — Built for Kenyan University Students
+</div>
+
+<script>
+// Load listings from Flask API
+fetch('/api/listings')
+    .then(res => res.json())
+    .then(data => {
+        const grid = document.getElementById('listingsGrid');
+
+        if (data.length === 0) {
+            // Show hardcoded sample listings if DB is empty
+            const samples = [
+                { title: 'Qwetu Homes — Single Room', location: 'Ngara, Nairobi', monthly_rent: 35000, listing_type: 'hostel', emoji: '🏢' },
+                { title: 'Qejani Residences — Double Room', location: 'Parklands, Nairobi', monthly_rent: 20000, listing_type: 'hostel', emoji: '🏬' },
+                { title: 'Kaskazini Greens — Quad Room', location: 'Kasarani, Nairobi', monthly_rent: 16500, listing_type: 'hostel', emoji: '🌿' },
+                { title: 'Wilson View — Bedsitter', location: 'South B, Nairobi', monthly_rent: 12000, listing_type: 'hostel', emoji: '🏠' },
+                { title: 'Cozy Single Room', location: 'Ngara, Nairobi', monthly_rent: 9500, listing_type: 'independent', emoji: '🛏️' },
+                { title: 'Modern Studio Apartment', location: 'Westlands, Nairobi', monthly_rent: 28000, listing_type: 'independent', emoji: '🏙️' },
+            ];
+
+            grid.innerHTML = samples.map(l => `
+                <div class="listing-card">
+                    <div class="card-image">${l.emoji}</div>
+                    <div class="card-body">
+                        <div class="card-title">${l.title}</div>
+                        <div class="card-location">📍 ${l.location}</div>
+                        <span class="card-tag">${l.listing_type === 'hostel' ? '🏢 Hostel' : '🏠 Independent'}</span>
+                        <div class="card-price">KES ${l.monthly_rent.toLocaleString()} / month</div>
+                        <div class="lock-overlay">
+                            🔒 <a href="/login">Sign in</a> or <a href="/register">register</a> to book
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            return;
+        }
+
+        grid.innerHTML = data.map(l => `
+            <div class="listing-card">
+                <div class="card-image">🏠</div>
+                <div class="card-body">
+                    <div class="card-title">${l.title}</div>
+                    <div class="card-location">📍 ${l.location}</div>
+                    <span class="card-tag">${l.listing_type === 'hostel' ? '🏢 Hostel' : '🏠 Independent'}</span>
+                    <div class="card-price">KES ${l.monthly_rent.toLocaleString()} / month</div>
+                    <div class="lock-overlay">
+                        🔒 <a href="/login">Sign in</a> or <a href="/register">register</a> to book
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    })
+    .catch(err => console.log('Error loading listings:', err));
+</script>
+
+</body>
+</html>
